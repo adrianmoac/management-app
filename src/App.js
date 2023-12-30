@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import theme from './theme'
+import { Routes, Route } from "react-router-dom";
+import { ThemeProvider } from '@material-ui/core/styles';
+import HomePage from './components/HomePage/HomePage';
+import TopBar from './components/utils/pageBox/TopBar';
+import AddCostForm from './components/AddCost/AddCostForm';
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+    <ThemeProvider theme={theme}>
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/historico' element={<TopBar />} />
+        <Route path='/estimar-gasto' element={<HomePage />} />
+        <Route path='/agregar-gasto' element={<AddCostForm />} />
+        <Route path='/agregar-ingreso' element={<HomePage />} />
+      </Routes>
+    </ThemeProvider>
+      </>
+    );
 }
 
 export default App;

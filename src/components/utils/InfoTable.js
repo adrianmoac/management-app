@@ -1,0 +1,132 @@
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { Grid, makeStyles } from '@material-ui/core';
+import { getCostData } from '../../backend/queries';
+import { Button, IconButton, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#E7E7E7',
+    color: '#333333',
+    fontWeight: 'bold'
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: '#F8F8F8',
+  },
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
+const useStyles = makeStyles(theme => ({
+    root: {
+      flex: '1 1 auto',
+      padding: '5%',
+      margin: '0 auto',
+    },
+    tableText: {
+      color: theme.palette.lightGray.main
+    },
+    outcome: {
+      color: theme.palette.red.main
+    },
+    incomes: {
+      color: theme.palette.green.main
+    },
+    icons: {
+      color: theme.palette.lightGray.main,
+      '&:hover': {
+        cursor: 'pointer'
+    },
+    }
+  }))
+
+const InfoTable = props => {
+  const classes = useStyles();
+
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const result = await getCostData();
+              setData(result);
+          } catch (error) {
+              console.error("Error fetching data:", error);
+          }
+      };
+
+      fetchData();
+  }, []); 
+
+  return (
+      <Grid container className={classes.root}>
+          <TableContainer component={Paper} sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                      <StyledTableCell>Importe</StyledTableCell>
+                      <StyledTableCell align="center">Fecha</StyledTableCell>
+                      <StyledTableCell align="center">Categoría</StyledTableCell>
+                      <StyledTableCell align="left">Descripción</StyledTableCell>
+                      <StyledTableCell align="left"></StyledTableCell>
+                      <StyledTableCell align="right"></StyledTableCell>
+                      <StyledTableCell align="right"></StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                  <TableBody>
+                      {data.map((row) => (
+                          <StyledTableRow key={row.id}>
+                              <StyledTableCell>
+                                <Typography className={row.tipo !== 'Ingreso' ? classes.outcome : classes.incomes}>{row.tipo !== 'Ingreso' ? `-$${row.costo.importe}` : `$${row.costo.importe}`}</Typography>
+                                </StyledTableCell>
+                              <StyledTableCell align="center">
+                                <Typography className={classes.tableText}>{row.fecha}</Typography>
+                                </StyledTableCell>
+                              <StyledTableCell align="center">
+                              <Typography className={classes.tableText}>{row.categoria.nombre}</Typography>
+                              </StyledTableCell>
+                              <StyledTableCell align="left">
+                              <Typography className={classes.tableText}>{row.descripcion}</Typography>
+                              </StyledTableCell>
+                              <StyledTableCell align="left">
+                                <Button variant='text'>
+                                  <Typography className={classes.tableText} sx={{textDecoration: 'underline',cursor: 'pointer', ":hover": {color: '#5ca4a9'}}}>{row.categoria.nombre==='Fijo' && 'comparar'}</Typography>
+                                </Button>
+                              </StyledTableCell>
+
+                              <StyledTableCell align="left">
+                                <IconButton>
+                                  <EditIcon className={classes.icons}/>
+                                </IconButton>
+                              </StyledTableCell>
+                              <StyledTableCell align="left">
+                                <IconButton>
+                                    <DeleteIcon className={classes.icons}/>
+                                  </IconButton>
+                              </StyledTableCell>
+                          </StyledTableRow>
+                      ))}
+                  </TableBody>
+              </Table>
+          </TableContainer>
+      </Grid>
+  );
+}
+
+export default InfoTable
