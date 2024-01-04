@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import propTypes from 'prop-types'
-import { Box, Grid, Paper, makeStyles } from '@material-ui/core'
+import { makeStyles, Paper, Box, Grid } from '@material-ui/core'
+import { Typography } from '@mui/material'
 
 const useStyles = makeStyles(theme => ({
   box: {
@@ -20,20 +21,18 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     fontSize: 21,
-    color: theme.palette.lightGray.main
+    color: 'customLightGrey' 
   },
   amount: {
     fontSize: 25,
-    color: theme.palette.gray.main,
+    color: 'customGrey',
     fontWeight: 'bold'
   },
   expenses: {
     fontSize: 18,
-    color: theme.palette.red.main
   },
   incomes: {
     fontSize: 18,
-    color: theme.palette.green.main
   }
 
 }))
@@ -52,8 +51,8 @@ const InfoCard = props => {
         <Grid container spacing={5} justifyContent="center">
           <Grid item xs={12} className={classes.title}>{title}</Grid>
           <Grid item xs={12} className={classes.amount}>{expenses ? total<0 ? `-$${Math.abs(total)}` : `$${total}` : `$${amount}`}</Grid>
-          <Grid item xs={6} className={classes.expenses}>{expenses && `-$${expenses}`}</Grid>
-          <Grid item xs={6} className={classes.incomes}>{incomes>=0 && `$${incomes}`}</Grid>
+          <Grid item xs={6} ><Typography className={classes.expenses} color='red.main'>{expenses && `-$${expenses}`}</Typography></Grid>
+          <Grid item xs={6} ><Typography className={classes.incomes} color='green.main'>{incomes>=0 && `$${incomes}`}</Typography></Grid>
         </Grid>
       </Paper>
     </Box>

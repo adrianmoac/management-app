@@ -39,17 +39,7 @@ const useStyles = makeStyles(theme => ({
       padding: '5%',
       margin: '0 auto',
     },
-    tableText: {
-      color: theme.palette.lightGray.main
-    },
-    outcome: {
-      color: theme.palette.red.main
-    },
-    incomes: {
-      color: theme.palette.green.main
-    },
     icons: {
-      color: theme.palette.lightGray.main,
       '&:hover': {
         cursor: 'pointer'
     },
@@ -93,30 +83,30 @@ const InfoTable = props => {
                       {data.map((row) => (
                           <StyledTableRow key={row.id}>
                               <StyledTableCell>
-                                <Typography className={row.tipo !== 'Ingreso' ? classes.outcome : classes.incomes}>{row.tipo !== 'Ingreso' ? `-$${row.costo.importe}` : `$${row.costo.importe}`}</Typography>
+                                <Typography color={row.tipo !== 'Ingreso' ? 'red.main' : 'green.main'}>{row.tipo !== 'Ingreso' ? `-$${row.importe}` : `$${row.importe}`}</Typography>
                                 </StyledTableCell>
                               <StyledTableCell align="center">
-                                <Typography className={classes.tableText}>{row.fecha}</Typography>
+                                <Typography color='common.grey'>{row.fecha}</Typography>
                                 </StyledTableCell>
                               <StyledTableCell align="center">
-                              <Typography className={classes.tableText}>{row.categoria.nombre}</Typography>
+                              <Typography color='common.grey'>{row.categoria.nombre}</Typography>
                               </StyledTableCell>
                               <StyledTableCell align="left">
-                              <Typography className={classes.tableText}>{row.descripcion}</Typography>
+                              <Typography color='common.grey'>{row.descripcion}</Typography>
                               </StyledTableCell>
                               <StyledTableCell align="left">
                                 <Button variant='text'>
-                                  <Typography className={classes.tableText} sx={{textDecoration: 'underline',cursor: 'pointer', ":hover": {color: '#5ca4a9'}}}>{row.categoria.nombre==='Fijo' && 'comparar'}</Typography>
+                                  <Typography color='common.grey' sx={{textDecoration: 'underline',cursor: 'pointer', ":hover": {color: '#5ca4a9'}}}>{row.categoria.nombre==='Fijo' && 'comparar'}</Typography>
                                 </Button>
                               </StyledTableCell>
 
                               <StyledTableCell align="left">
-                                <IconButton>
+                                <IconButton color='lightGrey'>
                                   <EditIcon className={classes.icons}/>
                                 </IconButton>
                               </StyledTableCell>
                               <StyledTableCell align="left">
-                                <IconButton>
+                                <IconButton color='lightGrey'>
                                     <DeleteIcon className={classes.icons}/>
                                   </IconButton>
                               </StyledTableCell>

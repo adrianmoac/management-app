@@ -15,8 +15,8 @@ const HomeTopBar = props => {
     let today = new Date().toISOString().slice(0, 10)
     console.log(data)
     const todaysActivities = data.filter((info) => info.fecha === today)
-    const todaysOutcomes = todaysActivities.filter((info) => info.tipo !== 'Ingreso').reduce((acc, info) => acc += info.costo.importe, 0)
-    const todaysIncomes = todaysActivities.filter((info) => info.tipo === 'Ingreso').reduce((acc, info) => acc += info.costo.importe, 0)
+    const todaysOutcomes = todaysActivities.filter((info) => info.tipo !== 'Ingreso').reduce((acc, info) => acc += info.importe, 0)
+    const todaysIncomes = todaysActivities.filter((info) => info.tipo === 'Ingreso').reduce((acc, info) => acc += info.importe, 0)
     const todaysBalance = todaysIncomes - todaysOutcomes
     setTodaysData(a => ({...a, total: todaysBalance, outcomes: todaysOutcomes, incomes: todaysIncomes}))
 
@@ -32,8 +32,8 @@ const HomeTopBar = props => {
       const completeInfo = new Date(info.fecha)
       return completeInfo >= startOfTheWeek && completeInfo <= endOfTheWeek
     })
-    const weeklyOutcomes = weeklyActivities.filter((info) => info.tipo !== 'Ingreso').reduce((acc, info) => acc += info.costo.importe, 0)
-    const weeklyIncomes = weeklyActivities.filter((info) => info.tipo === 'Ingreso').reduce((acc, info) => acc += info.costo.importe, 0)
+    const weeklyOutcomes = weeklyActivities.filter((info) => info.tipo !== 'Ingreso').reduce((acc, info) => acc += info.importe, 0)
+    const weeklyIncomes = weeklyActivities.filter((info) => info.tipo === 'Ingreso').reduce((acc, info) => acc += info.importe, 0)
     const weeklyBalance = weeklyIncomes - weeklyOutcomes
     setWeeklyData(a => ({...a, total: weeklyBalance, outcomes: weeklyOutcomes, incomes: weeklyIncomes}))
 
@@ -43,8 +43,8 @@ const HomeTopBar = props => {
       const completeInfo = new Date(info.fecha)
       return completeInfo.getMonth() === currentMonth
     })
-    const monthlyOutcomes = monthlyActivities.filter((info) => info.tipo !== 'Ingreso').reduce((acc, info) => acc += info.costo.importe, 0)
-    const monthlyIncomes = monthlyActivities.filter((info) => info.tipo === 'Ingreso').reduce((acc, info) => acc += info.costo.importe, 0)
+    const monthlyOutcomes = monthlyActivities.filter((info) => info.tipo !== 'Ingreso').reduce((acc, info) => acc += info.importe, 0)
+    const monthlyIncomes = monthlyActivities.filter((info) => info.tipo === 'Ingreso').reduce((acc, info) => acc += info.importe, 0)
     const monthlyBalance = monthlyIncomes - monthlyOutcomes
     setMonthlyData(a => ({...a, total: monthlyBalance, outcomes: monthlyOutcomes, incomes: monthlyIncomes}))
   }, [data])

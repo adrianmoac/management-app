@@ -1,41 +1,11 @@
-import { Grid, Typography, makeStyles } from '@material-ui/core'
+import { Grid, makeStyles } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import React from 'react'
 import {content} from '../../barContent'
 import { Link } from 'react-router-dom'  
 
-const useStyles = makeStyles(theme => ({
-    barWhite: {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginRight: '40px',
-        paddingTop: '10px',
-        cursor: 'pointer',
-        '&:hover': {
-            textDecoration: 'underline'
-        },
-        color: theme.palette.white.main
-    },
-    barBlack: {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginRight: '40px',
-        paddingTop: '10px',
-        cursor: 'pointer',
-        '&:hover': {
-            textDecoration: 'underline'
-        },
-        color: theme.palette.lightGray.main
-    }
-}))
-
 const TopBar = props => {
     const {color} = props
-
-    const classes = useStyles()
 
   return (
     <>
@@ -44,7 +14,18 @@ const TopBar = props => {
             {Object.values(content).filter(page => page.label !== 'Agregar ingreso').map((page) => (
                 <Grid item xs={6} sm={6} md='auto'>
                     <Link to={page.linkTo} state={{title: page.label}} style={{textDecoration: 'none'}}>
-                        <Typography className={color === 'white' ? classes.barWhite : classes.barBlack}>{page.label}</Typography>
+                        <Typography color={color === 'white' ? 'common.white' : 'common.grey'} sx={{
+                                    fontSize: '18px',
+                                    fontWeight: 'bold',
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    marginRight: '40px',
+                                    paddingTop: '10px',
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                        textDecoration: 'underline'
+                                    },
+                        }}>{page.label}</Typography>
                     </Link>
                 </Grid>
             ))}
