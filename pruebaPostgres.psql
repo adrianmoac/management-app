@@ -19,7 +19,8 @@ CREATE TABLE post(
 CREATE TABLE  importe(
     id SERIAL PRIMARY KEY,
     tipo VARCHAR(7) NOT NULL,
-    id_importe INT REFERENCES costo(id_importe) ON DELETE CASCADE NOT NULL,
+    importe INT NOT NULL,
+    importe_estimado INT,
     id_categoria INT REFERENCES categoria(id_categoria) ON DELETE RESTRICT,
     descripcion VARCHAR(200),
     fecha DATE NOT NULL,
@@ -29,11 +30,11 @@ CREATE TABLE  importe(
     CONSTRAINT fk_categoria FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
     CONSTRAINT fk_costo FOREIGN KEY (id_importe) REFERENCES costo(id_importe)
 
-CREATE TABLE costo(
-    id_importe SERIAL PRIMARY KEY,
-    importe INT NOT NULL,
-    importe_estimado INT
-);
+-- CREATE TABLE costo(
+--     id_importe SERIAL PRIMARY KEY,
+--     importe INT NOT NULL,
+--     importe_estimado INT
+-- );
 
 CREATE TABLE categoria(
     id_categoria SERIAL PRIMARY KEY,
@@ -53,5 +54,5 @@ INSERT INTO categoria(nombre) VALUES ('Salidas');
 
 INSERT INTO costo(importe) VALUES('200');
 
-INSERT INTO importe(tipo, id_importe, id_categoria, descripcion, fecha) VALUES('Egreso', 1, 2, 'Me quiero comprar otro mouse', current_date);
-INSERT INTO importe(tipo, id_importe, id_categoria, descripcion, fecha) VALUES('Ingreso', 1, 1, 'Me quiero comprar otro teclado', current_date);
+INSERT INTO importe(tipo, importe, id_categoria, descripcion, fecha) VALUES('Egreso', 100, 2, 'Me quiero comprar otro mouse', current_date);
+INSERT INTO importe(tipo, importe, id_categoria, descripcion, fecha) VALUES('Ingreso', 200, 1, 'Me quiero comprar otro teclado', current_date);

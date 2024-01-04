@@ -1,39 +1,40 @@
-import { createTheme, responsiveFontSizes } from '@material-ui/core/styles'
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 // import { alpha } from '@material-ui/core/styles'
 
 let theme = createTheme({
     palette: {
         primary: {
-            main: '#cc0000',
+            main: '#333333',
             light: '#5ca4a9'
+        },
+        secondary: {
+            main: '#5ca4a9'
         },
         common: {
             black: '#363636',
-            blue: '#24aded',
-            grey: '#E7E7E7',
-            pink: '#ed7fbd',
-            white: '#fff',
+            blue: '#5ca4a9',
+            grey: '#333333',
+            lightGrey: '#454955',
+            white: '#f6f4f3',
             yellow: '#f5aa3d',
-            orange: '#FF8552'
+            orange: '#FF8552',
+            red: '#cc0000',
+            green: '#3cb043'
           },
-        gray: {
-            main: '#333333'
-        },
-        lightGray: {
-            main: '#454955'
-        },
-        white: {
-            main: '#f6f4f3',
-            light: '#ffffff'
-        },
-        blue: {
-            main: '#5ca4a9'
-        },
         red: {
             main: '#cc0000'
         },
         green: {
             main: '#3cb043'
+        },
+        blue: {
+            main: '#5ca4a9',
+        },
+        grey: {
+            main: '#333333',
+        },
+        lightGrey: {
+            main: '#454955',
         },
         error: {
             light: '#e57373',

@@ -6,13 +6,12 @@ import { Box, Grid, Paper, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
     background: {
-        backgroundColor: theme.palette.white.main
+        backgroundColor: 'customWhite'
     },
     title: {
-        color: theme.palette.lightGray.main,
+        color: 'customLightGrey',
     },
     box: {
-        height: '500px',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -47,7 +46,7 @@ const PaperForm = props => {
             <Grid item xs= {1}/>
             <Grid item xs={10}>
                 <Box className={classes.box}>
-                    <Paper className={classes.paper}>
+                    <Paper className={classes.paper} >
                         {children}
                     </Paper>
                 </Box>
