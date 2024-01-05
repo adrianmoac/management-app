@@ -40,9 +40,6 @@ const useStyles = makeStyles(theme => ({
 const InfoCard = props => {
     const {title, amount, expenses, incomes, data} = props
     const classes = useStyles()
-    // const [total, setTotal] = useState(0)
-  console.log('data in infoCard',expenses)
-    // setTotal(incomes-expenses)
     const total = incomes-expenses
 
   return (

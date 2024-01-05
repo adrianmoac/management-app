@@ -36,6 +36,24 @@ export async function getCategories() {
     }
 }
 
+export async function getSavings() {
+    try {
+        const { data, error } = await supabase
+            .from('cuentas')
+            .select('*');
+
+        if (error) {
+            console.error("Error fetching data:", error);
+        } else {
+            console.log("Fetched data:", data);
+            return data; // You might want to return the data
+        }
+    } catch (error) {
+        console.error("Error in getInfoImporte:", error);
+        throw error;
+    }
+}
+
 export async function insertNewCost(type, cost, date, category, repeat, description) {
     try {
         const { data, error } = await supabase
@@ -59,6 +77,44 @@ export async function insertNewCategory(name) {
         const { data, error } = await supabase
             .from('categoria')
             .insert({nombre: name});
+
+        if (error) {
+            console.error("Error fetching data:", error);
+        } else {
+            console.log("Fetched data:", data);
+            return data; // You might want to return the data
+        }
+    } catch (error) {
+        console.error("Error in getInfoImporte:", error);
+        throw error;
+    }
+}
+
+export async function upsertSavings(savings) {
+    try {
+        const { data, error } = await supabase
+            .from('cuentas')
+            .update({ahorro: savings})
+            .eq('id', 1);
+
+        if (error) {
+            console.error("Error fetching data:", error);
+        } else {
+            console.log("Fetched data:", data);
+            return data; // You might want to return the data
+        }
+    } catch (error) {
+        console.error("Error in getInfoImporte:", error);
+        throw error;
+    }
+}
+
+export async function upsertAvailableMoney(savings) {
+    try {
+        const { data, error } = await supabase
+            .from('cuentas')
+            .update({disponible: savings})
+            .eq('id', 1);
 
         if (error) {
             console.error("Error fetching data:", error);

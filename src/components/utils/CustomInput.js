@@ -27,7 +27,7 @@ const CustomInput = props => {
         options,
         buttonName,
         handleModal,
-        error
+        error,
     } = props
     const classes = useStyles()
 
@@ -60,6 +60,7 @@ const CustomInput = props => {
           className={classes.input}
           options={newArray}
           getOptionLabel={(option) => option.nombre || option} 
+          defaultValue={value || ''}
           onChange={(event, value) => {
             if (value === null) {
               onChange('');
@@ -98,6 +99,7 @@ const CustomInput = props => {
           className={classes.input}
           options={newArray}
           getOptionLabel={(option) => option.nombre || option} 
+          defaultValue={value || ''}
           onChange={(event, value) => {
             if (value === null) {
               onChange('');

@@ -16,3 +16,12 @@ export const repeatOptions =[
         nombre: 'Cada mes'
     },
 ]
+
+export const accounts =[
+    {
+        nombre: 'Ahorros'
+    },
+    {
+        nombre: 'Disponible para gastos'
+    }
+]

@@ -4,25 +4,33 @@ import CustomButton from '../utils/CustomButton'
 import CustomInput from '../utils/CustomInput'
 import { Grid } from '@mui/material'
 import CustomDatePicker from '../utils/DatePicker'
-import { getCategories, insertNewCost } from '../../backend/queries'
+import { getCategories, getSavings, insertNewCost, upsertAvailableMoney, upsertSavings } from '../../backend/queries'
 import dayjs from 'dayjs'
 import CategoryModal from '../utils/Modals/CategoryModal'
-import {repeatOptions} from '../../constants'
+import {accounts, repeatOptions} from '../../constants'
+import { useLocation } from 'react-router-dom'
 
-const AddCostForm = () => {
+const AddCostForm = props => {
+  const location = useLocation()
+  const receivedData = location.state
 const [categoryOptions, setCategoryOptions] = React.useState([])
+const [accountOptions, setAccountOptions] = React.useState([])
 const [cost, setCost] = React.useState('')  
 const [date, setDate] = React.useState(dayjs(new Date()))  
 const [category, setCategory] = React.useState('')  
 const [repeat, setRepeat] = React.useState('')
+const [account, setAccount] = React.useState('Disponible para gastos')
 const [description, setDescription] = React.useState('')  
 const [costError, setCostError] = React.useState('')  
 const [dateError, setDateError] = React.useState('')  
 const [categoryError, setCategoryError] = React.useState('')  
+const [accountError, setAccountError] = React.useState('')
+const [loading, setLoading] = React.useState(false)
 
 const [openCategoryModal, setOpenCategoryModal] = React.useState(false)
 
 React.useEffect(() => {
+  setLoading(true)
   const fetchData = async () => {
       try {
           const result = await getCategories();
@@ -30,10 +38,17 @@ React.useEffect(() => {
       } catch (error) {
           console.error("Error fetching data:", error);
       }
+      try {
+        const result = await getSavings();
+        setAccountOptions(result);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
   };
 
   fetchData();
 
+  setLoading(false)
 }, [openCategoryModal]); 
 
 const handleChange = (e, setValue, setError) => {
@@ -41,9 +56,8 @@ const handleChange = (e, setValue, setError) => {
   setError && setError('')
   setValue(value)
 }
-console.log(category)
 
-const validation = () => {
+const validation = async () => {
   let valid = true;
   if (cost) {
     setCostError('');
@@ -63,16 +77,47 @@ const validation = () => {
     setCategoryError('Tienes que ingresar una categoría');
     valid = false;
   }
+  if (account) {
+    setCategoryError('');
+  } else {
+    setAccountError('Tienes que seleccionar una cuenta destino');
+    valid = false;
+  }
   return valid;
 };
 
 const handleSubmit = () => {
+  setLoading(true)
   if (validation()) {
-    const type = 'Egreso'
-    const {error} = insertNewCost(type, cost, date, category, repeat, description)
+    let categoryId = ''
+    categoryOptions.forEach(option => {
+      if (option.nombre === category) {
+        categoryId = option.id_categoria
+      } 
+    })
+    const type = receivedData.title === 'Agregar ingreso' ? 'Ingreso' : 'Egreso'
+    const {error} = insertNewCost(type, cost, date, categoryId, repeat, description)
     error && console.log(error)
+    let availableOperation
+    let savingsOperation
+    if (type === 'Egreso') {
+      availableOperation = accountOptions[0].disponible - parseInt(cost)
+      savingsOperation = accountOptions[0].ahorro - parseInt(cost)
+    } else {
+      availableOperation = accountOptions[0].disponible + parseInt(cost)
+      savingsOperation = accountOptions[0].ahorro + parseInt(cost)
+    }
+    const {accountError} = account === 'Disponible para gastos' ? upsertAvailableMoney(availableOperation) : upsertSavings(savingsOperation)
+    accountError && console.log(accountError)
   }
+  setLoading(false)
 }
+console.log(account)
+
+if (loading){ 
+  return (
+  <p>Loading...</p>
+)}
 
   return (
     <>
@@ -125,7 +170,7 @@ const handleSubmit = () => {
                 onChange={e => handleChange(e, setRepeat)}
               ></CustomInput>
             </Grid>
-            <Grid item xs= {12} md ={10}>
+            <Grid item xs= {12} md ={5}>
               <CustomInput 
                 type={'text'}
                 label={'Descripción'} 
@@ -135,9 +180,20 @@ const handleSubmit = () => {
                 onChange={e => handleChange(e, setDescription)}
               ></CustomInput>
             </Grid>
+            <Grid item xs={12} md={5}>
+              <CustomInput 
+                type={'autocomplete'}
+                options={accounts}
+                error={accountError}
+                label={'Cuenta'} 
+                placeholder={'Selecciona la cuenta destino'} 
+                value={account}
+                onChange={e => handleChange(e, setAccount)}
+              ></CustomInput>
+            </Grid>
           </Grid>
         </PaperForm>
-        <CustomButton title='Agregar gasto' color={'blue'} onClick={handleSubmit}/>
+        <CustomButton title={receivedData.title} color={'blue'} onClick={handleSubmit}/>
     </>
   )
 }

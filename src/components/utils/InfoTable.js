@@ -12,6 +12,10 @@ import { getCostData } from '../../backend/queries';
 import { Button, IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import CustomInput from './CustomInput'
+import CustomDatePicker from './DatePicker'
+import CustomButton from './CustomButton'
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -47,9 +51,12 @@ const useStyles = makeStyles(theme => ({
   }))
 
 const InfoTable = props => {
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState([])
+  const [filterField, setFilterField] = React.useState('')
+  const [filterDate, setFilterDate] = React.useState('')
+
 
   React.useEffect(() => {
       const fetchData = async () => {
@@ -66,6 +73,35 @@ const InfoTable = props => {
 
   return (
       <Grid container className={classes.root}>
+          <Grid xs={8} md={2}><CustomInput
+            placeholder={'Datos a buscar'}
+            value={filterField}
+            onChange={(e) => setFilterField(e.target.value)}
+          ></CustomInput>
+          </Grid>
+          <Grid xs={12} md={4}>
+            <CustomDatePicker
+            ></CustomDatePicker>
+          </Grid>
+          <Grid xs={0} md={2}></Grid>
+          <Grid xs={6} md={2}>
+            <Link to={'/agregar-gasto'} state={{title: 'Agregar gasto'}} style={{textDecoration: 'none'}}>
+              <CustomButton
+                title={'Agregar gasto'}
+                color={'red'}
+                marginTop={'0px'}
+              ></CustomButton>
+            </Link>
+          </Grid>
+          <Grid xs={6} md={2}>
+            <Link to={'/agregar-ingreso'} state={{title: 'Agregar ingreso'}} style={{textDecoration: 'none'}}>
+              <CustomButton
+                title={'Agregar ingreso'}
+                color={'green'}
+                marginTop={'0px'}
+              ></CustomButton>
+            </Link>
+          </Grid>
           <TableContainer component={Paper} sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
               <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead>

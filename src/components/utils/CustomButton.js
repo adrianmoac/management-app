@@ -2,7 +2,11 @@ import React from 'react';
 import { Button, Grid } from '@mui/material';
 
 const CustomButton = props => {
-  const {title, color, onClick} = props
+  const {title, 
+    color, 
+    onClick,
+    marginTop='20px'
+  } = props
 
   return (
   <>
@@ -13,7 +17,7 @@ const CustomButton = props => {
               variant='contained' 
               color={color} 
               onClick={onClick}
-              sx={{marginTop: '20px', fontWeight: 'bold', textTransform: 'none', fontSize: 16, borderRadius: '10px', color: 'white'}}>{title}</Button>
+              sx={{marginTop: marginTop, fontWeight: 'bold', textTransform: 'none', fontSize: 16, borderRadius: '10px', color: 'white'}}>{title}</Button>
         </Grid>
     </Grid>
     </>

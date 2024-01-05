@@ -13,10 +13,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <Routes>
         <Route path='/' element={<HomePage />} />
-        <Route path='/historico' element={<TopBar />} />
+        <Route path='/historico:type' element={<TopBar />} />
+        <Route path='/ver-gasto:id' element={<AddCostForm />} />
         <Route path='/estimar-gasto' element={<HomePage />} />
         <Route path='/agregar-gasto' element={<AddCostForm />} />
-        <Route path='/agregar-ingreso' element={<HomePage />} />
+        <Route path='/agregar-ingreso' element={<AddCostForm />} />
+        <Route path='/editar-importe:id' element={<AddCostForm />} />
       </Routes>
     </ThemeProvider>
       </>
