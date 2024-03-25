@@ -5,7 +5,7 @@ import { CancelSubmitButton } from '../CustomButton'
 import { insertNewCategory } from '../../../backend/queries'
 
 const CategoryModal = props => {
-    const {open, handleClose, onChange} = props
+    const {open, handleClose, onChange, setCategory} = props
 
     const [newCategory, setNewCategory] = React.useState('')
 

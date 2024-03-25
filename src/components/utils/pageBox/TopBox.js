@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 const useStyles = makeStyles(theme => ({
     box: {
         width: '100%',
-        height: '35vh',
+        height: '380px',
     }
 }))
 

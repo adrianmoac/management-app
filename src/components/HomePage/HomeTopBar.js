@@ -1,19 +1,33 @@
 import React from 'react'
 import ShowPageBox from '../utils/pageBox/ShowPageBox'
 import InfoCard from '../utils/InfoCard'
-import { Grid } from '@material-ui/core'
-import InfoTable from '../utils/InfoTable'
+import { Grid, makeStyles } from '@material-ui/core'
+import { Carousel } from 'antd'
+import UpsertSavingsModal from '../utils/Modals/UpsertSavingsModal'
+import { useNavigate } from 'react-router-dom'
+
+const useStyles = makeStyles(theme => ({
+  carousel: {
+    margin: 0,
+    height: '300px',
+    color: '#fff',
+    textAlign: 'center',
+  }
+}))
 
 const HomeTopBar = props => {
-  const {data} = props
+  const {data, savings} = props
+  const classes = useStyles()
+  const navigate = useNavigate()
 
   const [todaysData, setTodaysData] = React.useState({'total': 0, 'outcomes': 0, 'incomes': 0});
   const [weeklyData, setWeeklyData] = React.useState({'total': 0, 'outcomes': 0, 'incomes': 0});
   const [monthlyData, setMonthlyData] = React.useState({'total': 0, 'outcomes': 0, 'incomes': 0});
+  const [openSavingsModal, setOpenSavingsModal] = React.useState(false)
+  const [openAvailableModal, setOpenAvailableModal] = React.useState(false)
 
   React.useEffect(() => {
     let today = new Date().toISOString().slice(0, 10)
-    console.log(data)
     const todaysActivities = data.filter((info) => info.fecha === today)
     const todaysOutcomes = todaysActivities.filter((info) => info.tipo !== 'Ingreso').reduce((acc, info) => acc += info.importe, 0)
     const todaysIncomes = todaysActivities.filter((info) => info.tipo === 'Ingreso').reduce((acc, info) => acc += info.importe, 0)
@@ -48,14 +62,37 @@ const HomeTopBar = props => {
     const monthlyBalance = monthlyIncomes - monthlyOutcomes
     setMonthlyData(a => ({...a, total: monthlyBalance, outcomes: monthlyOutcomes, incomes: monthlyIncomes}))
   }, [data])
-  console.log('todaysTotal', todaysData)
-  
+
+  const onChange = (currentSlide) => {
+    // console.log(currentSlide);
+  };
+
   return (
     <>
+    <UpsertSavingsModal
+      title={'Modificar ahorros'}
+      label={'Ahorro'}
+      placeholder={'Ingresa el ahorro'}
+      open={openSavingsModal}
+      handleClose={() => setOpenSavingsModal(false)}
+      currentSaving={savings[0].ahorro}
+      savings={savings}
+    ></UpsertSavingsModal>
+        <UpsertSavingsModal
+          title={'Modificar dinero disponible'}
+          label={'Dinero disponible'}
+          placeholder={'Ingresa la cantidad disponible'}
+          open={openAvailableModal}
+          handleClose={() => setOpenAvailableModal(false)}
+          currentSaving={savings[0].disponible}
+          savings={savings}
+    ></UpsertSavingsModal>
     <ShowPageBox>
-      <Grid container justifyContent='space-evenly'>
+    <Carousel afterChange={onChange}>
+      <div>
+      <Grid container justifyContent='space-evenly' className={classes.carousel} color='lightGrey' style={{marginTop: '30px'}}>
         <Grid item xs='auto' sm='auto' md='auto'/>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => navigate('/historico/diario')}>
           <InfoCard 
             title='Diario' 
             amount={todaysData.total}
@@ -64,7 +101,7 @@ const HomeTopBar = props => {
             >
           </InfoCard>
         </Grid>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => navigate('/historico/semanal')}>
           <InfoCard 
             title='Semanal' 
             amount={weeklyData.total}
@@ -73,7 +110,7 @@ const HomeTopBar = props => {
             >
           </InfoCard>
         </Grid>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => navigate('/historico/mensual')}>
           <InfoCard 
             title='Mensual' 
             amount={monthlyData.total}
@@ -83,6 +120,34 @@ const HomeTopBar = props => {
           </InfoCard>
         </Grid>
         </Grid>
+      </div>
+      <div>
+      <Grid container justifyContent='space-evenly' className={classes.carousel} color='lightGrey' style={{marginTop: '30px'}}>
+        <Grid item xs='auto' sm='auto' md='auto'/>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => setOpenSavingsModal(true)}>
+          <InfoCard 
+            title='Ahorros' 
+            amount={savings[0].ahorro}
+            >
+          </InfoCard>
+        </Grid>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}}>
+          <InfoCard 
+            title='Dinero acumulado' 
+            amount={savings[0].ahorro + savings[0].disponible}
+            >
+          </InfoCard>
+        </Grid>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => setOpenAvailableModal(true)}>
+          <InfoCard 
+            title='Disponible' 
+            amount={savings[0].disponible}
+            >
+          </InfoCard>
+        </Grid>
+        </Grid>
+      </div>
+    </Carousel>
     </ShowPageBox>
     </>
     )
