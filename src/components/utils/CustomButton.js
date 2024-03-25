@@ -2,7 +2,8 @@ import React from 'react';
 import { Button, Grid } from '@mui/material';
 
 const CustomButton = props => {
-  const {title, 
+  const {
+    title, 
     color, 
     onClick,
     marginTop='20px'

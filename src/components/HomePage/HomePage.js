@@ -2,6 +2,7 @@ import React from 'react';
 import HomeTopBar from './HomeTopBar';
 import InfoTable from '../utils/InfoTable';
 import { getCostData, getSavings } from '../../backend/queries';
+import { CircularProgress } from '@mui/material';
 
 const HomePage = () => {
   const [data, setData] = React.useState([]);
@@ -25,16 +26,20 @@ const HomePage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [loading]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', minHeight: '100vh'}}>
+        <CircularProgress color='blue'/>
+    </div>
+    )
   }
 
   return (
     <>
       <HomeTopBar data={data} savings={savings}></HomeTopBar>
-      <InfoTable data={data}></InfoTable>
+      <InfoTable data={data} savings={savings} loading={loading} setLoading={setLoading}></InfoTable>
     </>
   );
 };

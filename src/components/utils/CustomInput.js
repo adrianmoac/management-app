@@ -28,6 +28,7 @@ const CustomInput = props => {
         buttonName,
         handleModal,
         error,
+        disabled
     } = props
     const classes = useStyles()
 
@@ -51,6 +52,7 @@ const CustomInput = props => {
             InputProps={{
                 startAdornment: <InputAdornment position="start">{inputAdornment}</InputAdornment>,
             }}
+            disabled={disabled}
         ></TextField>
         <Typography color='error' style={{fontSize: '12px'}}>{error}</Typography>
         </>
@@ -61,6 +63,7 @@ const CustomInput = props => {
           options={newArray}
           getOptionLabel={(option) => option.nombre || option} 
           defaultValue={value || ''}
+          value={value || ''}
           onChange={(event, value) => {
             if (value === null) {
               onChange('');

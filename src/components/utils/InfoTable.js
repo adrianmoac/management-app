@@ -8,14 +8,15 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Grid, makeStyles } from '@material-ui/core';
-import { getCostData } from '../../backend/queries';
-import { Button, IconButton, Typography } from '@mui/material';
+import { deleteImport, getCostfilteredData, upsertAvailableMoney, upsertSavings } from '../../backend/queries';
+import { Button, CircularProgress, IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CustomInput from './CustomInput'
 import CustomDatePicker from './DatePicker'
 import CustomButton from './CustomButton'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { format } from 'date-fns'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,37 +52,62 @@ const useStyles = makeStyles(theme => ({
   }))
 
 const InfoTable = props => {
+  const {savings, loading, data, setLoading} = props
   const classes = useStyles()
+  const navigate = useNavigate()
 
-  const [data, setData] = React.useState([])
   const [filterField, setFilterField] = React.useState('')
   const [filterDate, setFilterDate] = React.useState('')
 
+  const onDelete = async (id, type, cost, account) => {
+    setLoading(true)
+    let availableOperation
+    let savingsOperation
+    if (type === 'Egreso') {
+      availableOperation = savings[0].disponible + parseInt(cost)
+      savingsOperation = savings[0].ahorro + parseInt(cost)
+    } else {
 
-  React.useEffect(() => {
-      const fetchData = async () => {
-          try {
-              const result = await getCostData();
-              setData(result);
-          } catch (error) {
-              console.error("Error fetching data:", error);
-          }
-      };
+      availableOperation = savings[0].disponible - parseInt(cost)
+      savingsOperation = savings[0].ahorro - parseInt(cost)
+    }
+    const {accountError} = account === 'Disponible para gastos' ? upsertAvailableMoney(availableOperation) : upsertSavings(savingsOperation)
+    accountError && console.log(accountError)
 
-      fetchData();
-  }, []); 
+    await deleteImport(id)
+    setLoading(false)
+  }
 
+  let filteredData
+  if(!filterField) {
+    filteredData = data
+  } else {
+    filteredData = data.filter(row => {
+      console.log(parseInt(filterField))
+      if(parseInt(filterField)) {
+        return row.importe === parseInt(filterField)
+      } else {
+        return row.descripcion.toLowerCase().includes(filterField.toLowerCase()) || row.categoria.nombre.toLowerCase().includes(filterField.toLowerCase())
+      }
+    })
+  }
+
+  if (loading){ 
+    return (
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', minHeight: '100vh'}}>
+        <CircularProgress color='blue'/>
+    </div>
+  )}
   return (
       <Grid container className={classes.root}>
-          <Grid xs={8} md={2}><CustomInput
+          <Grid xs={8} md={2}>
+            <CustomInput
             placeholder={'Datos a buscar'}
             value={filterField}
             onChange={(e) => setFilterField(e.target.value)}
           ></CustomInput>
           </Grid>
           <Grid xs={12} md={4}>
-            <CustomDatePicker
-            ></CustomDatePicker>
           </Grid>
           <Grid xs={0} md={2}></Grid>
           <Grid xs={6} md={2}>
@@ -116,13 +142,14 @@ const InfoTable = props => {
                   </TableRow>
                 </TableHead>
                   <TableBody>
-                      {data.map((row) => (
+                      {filteredData.map((row) => (
                           <StyledTableRow key={row.id}>
                               <StyledTableCell>
-                                <Typography color={row.tipo !== 'Ingreso' ? 'red.main' : 'green.main'}>{row.tipo !== 'Ingreso' ? `-$${row.importe}` : `$${row.importe}`}</Typography>
+                                <Link style={{textDecoration: 'none'}} to={'/ver-importe/' + row.id} state={{title: 'Ver importe'}}>
+                                <Typography style={{textDecoration: 'underline'}} color={row.tipo !== 'Ingreso' ? 'red.main' : 'green.main'}>{row.tipo !== 'Ingreso' ? `-$${row.importe}` : `$${row.importe}`}</Typography></Link>
                                 </StyledTableCell>
                               <StyledTableCell align="center">
-                                <Typography color='common.grey'>{row.fecha}</Typography>
+                                <Typography color='common.grey'>{format(new Date(row.fecha), 'dd/MM/yyyy')}</Typography>
                                 </StyledTableCell>
                               <StyledTableCell align="center">
                               <Typography color='common.grey'>{row.categoria.nombre}</Typography>
@@ -137,12 +164,12 @@ const InfoTable = props => {
                               </StyledTableCell>
 
                               <StyledTableCell align="left">
-                                <IconButton color='lightGrey'>
-                                  <EditIcon className={classes.icons}/>
-                                </IconButton>
-                              </StyledTableCell>
+                                  <IconButton color='lightGrey' onClick={() => navigate(`/editar-importe/${row.id}`, {state: {title: 'Editar importe'}})}>
+                                    <EditIcon className={classes.icons}/>
+                                  </IconButton>
+                               </StyledTableCell>
                               <StyledTableCell align="left">
-                                <IconButton color='lightGrey'>
+                                <IconButton color='lightGrey' onClick={() => {onDelete(row.id, row.tipo, row.importe, row.cuenta)}}>
                                     <DeleteIcon className={classes.icons}/>
                                   </IconButton>
                               </StyledTableCell>

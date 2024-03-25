@@ -55,5 +55,5 @@ INSERT INTO categoria(nombre) VALUES ('Salidas');
 
 INSERT INTO costo(importe) VALUES('200');
 
-INSERT INTO importe(tipo, importe, id_categoria, descripcion, fecha) VALUES('Egreso', 100, 2, 'Me quiero comprar otro mouse', current_date);
-INSERT INTO importe(tipo, importe, id_categoria, descripcion, fecha) VALUES('Ingreso', 200, 1, 'Me quiero comprar otro teclado', current_date);
+INSERT INTO importe(tipo, importe, id_categoria, descripcion, fecha, cuenta) VALUES('Egreso', 100, 2, 'Me quiero comprar otro mouse', current_date, 'Ahorro');
+INSERT INTO importe(tipo, importe, id_categoria, descripcion, fecha, cuenta) VALUES('Ingreso', 200, 1, 'Me quiero comprar otro teclado', current_date, 'Disponible para gastos');

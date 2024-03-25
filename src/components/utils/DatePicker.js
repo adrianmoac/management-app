@@ -4,6 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import {Typography } from '@mui/material'
 import { makeStyles } from '@material-ui/core'
+import dayjs from 'dayjs'
 
 const useStyles = makeStyles((theme) => ({
     label: {
@@ -21,7 +22,8 @@ const CustomDatePicker = props => {
         label,
         value,
         onChange,
-        defaultValue
+        defaultValue,
+        disabled
     } = props
     const classes = useStyles()
   return (
@@ -30,21 +32,12 @@ const CustomDatePicker = props => {
         <DatePicker className={classes.input} slotProps={{textField: () => ({
             color: 'blue',
         })}}
-
-
-//          sx={{
-//             color: 'blue',
-//   "&.Mui-focused": { color: "blue.main" }, //styles the label
-
-//   "& .MuiOutlinedInput-root": {
-//    "&:hover > fieldset": { borderColor: "blue.main" },
-//   },
-//  }}
         format="D/M/YYYY"
+        disabled={disabled}
         defaultValue={defaultValue}
         autoOk={true}
         inputFormat="dd.MM.yyyy"
-        value={value}
+        value={value && dayjs(value)}
         onChange={onChange}
         ></DatePicker>
     </LocalizationProvider>

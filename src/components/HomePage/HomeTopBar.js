@@ -2,15 +2,14 @@ import React from 'react'
 import ShowPageBox from '../utils/pageBox/ShowPageBox'
 import InfoCard from '../utils/InfoCard'
 import { Grid, makeStyles } from '@material-ui/core'
-import InfoTable from '../utils/InfoTable'
 import { Carousel } from 'antd'
-import { Box } from '@mui/material'
 import UpsertSavingsModal from '../utils/Modals/UpsertSavingsModal'
+import { useNavigate } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   carousel: {
     margin: 0,
-    height: '245px',
+    height: '300px',
     color: '#fff',
     textAlign: 'center',
   }
@@ -19,6 +18,7 @@ const useStyles = makeStyles(theme => ({
 const HomeTopBar = props => {
   const {data, savings} = props
   const classes = useStyles()
+  const navigate = useNavigate()
 
   const [todaysData, setTodaysData] = React.useState({'total': 0, 'outcomes': 0, 'incomes': 0});
   const [weeklyData, setWeeklyData] = React.useState({'total': 0, 'outcomes': 0, 'incomes': 0});
@@ -90,9 +90,9 @@ const HomeTopBar = props => {
     <ShowPageBox>
     <Carousel afterChange={onChange}>
       <div>
-      <Grid container justifyContent='space-evenly' className={classes.carousel} color='lightGrey'>
+      <Grid container justifyContent='space-evenly' className={classes.carousel} color='lightGrey' style={{marginTop: '30px'}}>
         <Grid item xs='auto' sm='auto' md='auto'/>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => navigate('/historico/diario')}>
           <InfoCard 
             title='Diario' 
             amount={todaysData.total}
@@ -101,7 +101,7 @@ const HomeTopBar = props => {
             >
           </InfoCard>
         </Grid>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => navigate('/historico/semanal')}>
           <InfoCard 
             title='Semanal' 
             amount={weeklyData.total}
@@ -110,7 +110,7 @@ const HomeTopBar = props => {
             >
           </InfoCard>
         </Grid>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => navigate('/historico/mensual')}>
           <InfoCard 
             title='Mensual' 
             amount={monthlyData.total}
@@ -122,23 +122,23 @@ const HomeTopBar = props => {
         </Grid>
       </div>
       <div>
-      <Grid container justifyContent='space-evenly' className={classes.carousel} color='lightGrey'>
+      <Grid container justifyContent='space-evenly' className={classes.carousel} color='lightGrey' style={{marginTop: '30px'}}>
         <Grid item xs='auto' sm='auto' md='auto'/>
-        <Grid item xs={12} sm={12} md={3} onClick={() => setOpenSavingsModal(true)}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => setOpenSavingsModal(true)}>
           <InfoCard 
             title='Ahorros' 
             amount={savings[0].ahorro}
             >
           </InfoCard>
         </Grid>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}}>
           <InfoCard 
             title='Dinero acumulado' 
             amount={savings[0].ahorro + savings[0].disponible}
             >
           </InfoCard>
         </Grid>
-        <Grid item xs={12} sm={12} md={3} onClick={() => setOpenAvailableModal(true)}>
+        <Grid item xs={12} sm={12} md={3} style={{cursor: 'pointer'}} onClick={() => setOpenAvailableModal(true)}>
           <InfoCard 
             title='Disponible' 
             amount={savings[0].disponible}

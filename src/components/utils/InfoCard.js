@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import propTypes from 'prop-types'
-import { makeStyles, Paper, Box, Grid } from '@material-ui/core'
-import { Typography } from '@mui/material'
+import { makeStyles, Box, Grid } from '@material-ui/core'
+import { Typography, Paper } from '@mui/material'
 
 const useStyles = makeStyles(theme => ({
   box: {
@@ -17,15 +17,12 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     padding: theme.spacing(2),
     textAlign: 'center',
-    borderRadius: theme.spacing(2), 
   },
   title: {
     fontSize: 21,
-    color: 'customLightGrey' 
   },
   amount: {
     fontSize: 25,
-    color: 'customGrey',
     fontWeight: 'bold'
   },
   expenses: {
@@ -38,16 +35,19 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const InfoCard = props => {
-    const {title, amount, expenses, incomes, data} = props
+    const {title, amount, expenses, incomes, textColor='grey.main', color, amountType} = props
     const classes = useStyles()
-    const total = incomes-expenses
-
+    const total = expenses !== 0 ? incomes - expenses : incomes;
+    
   return (
     <Box className={classes.box}>
-      <Paper elevation={6} className={classes.paper}>
+      <Paper elevation={6} className={classes.paper} sx={{backgroundColor: color, borderRadius: 6}}>
         <Grid container spacing={5} justifyContent="center">
           <Grid item xs={12} className={classes.title}>{title}</Grid>
-          <Grid item xs={12} className={classes.amount}>{expenses ? total<0 ? `-$${Math.abs(total)}` : `$${total}` : `$${amount}`}</Grid>
+          {
+            !amountType ?  <Grid item xs={12} className={classes.amount}><Typography color={textColor} style={{fontSize: 25, fontWeight: 'bold'}}>{expenses ? total<0 ? `-$${Math.abs(total)}` : `$${total}` : `$${amount}`}</Typography></Grid> :
+            <Grid item xs={12} className={classes.amount}><Typography color={textColor} style={{fontSize: 25, fontWeight: 'bold'}}>{amountType === 'Egreso' ? `-$${amount}` : `$${amount}`}</Typography></Grid>
+          }
           <Grid item xs={6} ><Typography className={classes.expenses} color='red.main'>{expenses && `-$${expenses}`}</Typography></Grid>
           <Grid item xs={6} ><Typography className={classes.incomes} color='green.main'>{incomes>=0 && `$${incomes}`}</Typography></Grid>
         </Grid>
@@ -58,7 +58,6 @@ const InfoCard = props => {
 
 InfoCard.propTypes = {
     amount: propTypes.number.isRequired,
-    amountType: propTypes.number.isRequired
 }
 
 export default InfoCard

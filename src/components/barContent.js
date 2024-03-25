@@ -5,11 +5,7 @@ export const content = {
     },
     historico: {
         label: 'Histórico',
-        linkTo: '/historico'
-    },
-    estimar: {
-        label: 'Estimar gasto',
-        linkTo: '/estimar-gasto'
+        linkTo: '/historico/mensual'
     },
     agregarGasto: {
         label: 'Agregar gasto',
